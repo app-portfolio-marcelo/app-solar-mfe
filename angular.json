@@ -59,6 +59,8 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+           "options": {
+              "port": 4300            },
           "configurations": {
             "production": {
               "buildTarget": "solar-consult:build:production"
@@ -94,5 +96,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "9658177d-0c13-4e92-be16-891d80083d3c"
   }
 }
