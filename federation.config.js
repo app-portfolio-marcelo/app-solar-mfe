@@ -2,14 +2,14 @@ const { withNativeFederation, shareAll } = require('@angular-architects/native-f
 
 module.exports = withNativeFederation({
 
-  name: 'solar-consult',
+  name: 'solar_consult',
 
   exposes: {
-    './Component': './src/app/app.ts',
+    './Component': './src/app/solar/solar.ts',
   },
 
   shared: {
-    ...shareAll({ singleton: true, strictVersion: true, requiredVersion: 'auto' }),
+    ...shareAll({}),
   },
 
   skip: [
