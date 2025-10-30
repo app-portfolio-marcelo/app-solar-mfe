@@ -1,0 +1,13 @@
+<form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+  <label for="question">Pergunta:</label>
+  <input id="question" formControlName="question" type="text" />
+  <button type="submit">Enviar</button>
+</form>
+
+
+@if(response){
+  <div class="response">
+    <h3>Resposta do Gemini:</h3>
+    <p>{{ response }}</p>
+  </div>    
+}

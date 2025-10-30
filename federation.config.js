@@ -5,7 +5,7 @@ module.exports = withNativeFederation({
   name: 'solar_consult',
 
   exposes: {
-    './Component': './src/app/solar/solar.ts',
+    './Component': './src/app/components/solar/solar.ts',
   },
 
   shared: {
