@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
-import { Solar } from './components/solar/solar';
+import { MachineLearning } from './components/machine-learning/machine-learning';
+import { DecisionTree } from './components/decision-tree/decision-tree';
 
 export const routes: Routes = [
-    { path: '', component: Solar }
+    { path: '', component: MachineLearning },
+    { path: 'decision-tree', component: DecisionTree }
 ];

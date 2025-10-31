@@ -6,6 +6,7 @@ module.exports = withNativeFederation({
 
   exposes: {
     './Component': './src/app/components/solar/solar.ts',
+    './Component': './src/app/components/machine-learning/machine-learning.ts',
   },
 
   shared: {

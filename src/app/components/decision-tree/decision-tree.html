@@ -1,0 +1,281 @@
+<div class="decision-tree-dashboard">
+  <div class="container">
+    
+    <!-- Navigation Header -->
+    <div class="nav-header slide-in-left">
+      <button class="back-btn" (click)="goBack()">
+        ← Back
+      </button>
+      <div class="page-info">
+        <h1 class="page-title">Decision Tree Analysis</h1>
+        <p class="page-subtitle">Advanced decision tree model for fraud detection</p>
+      </div>
+      <div class="header-actions">
+        <div class="user-info">
+          <div class="user-avatar">{{ currentUser()?.name?.charAt(0) || 'U' }}</div>
+          <span>{{ currentUser()?.name || 'User' }}</span>
+        </div>
+        <button class="logout-btn micro-bounce" (click)="logout()">
+          Sign Out
+        </button>
+      </div>
+    </div>
+
+    <!-- Error State Global -->
+    @if (error()) {
+      <div class="alert alert-error mb-4">
+        <span>{{ error() }}</span>
+        <button class="close-alert" (click)="clearError()">×</button>
+      </div>
+    }
+
+    <!-- Success State -->
+    @if (success()) {
+      <div class="alert alert-success mb-4">
+        <span>{{ success() }}</span>
+        <button class="close-alert" (click)="clearSuccess()">×</button>
+      </div>
+    }
+
+    <!-- Loading State Global -->
+    @if (loading()) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading decision tree data...</p>
+      </div>
+    }
+
+    <!-- Performance Metrics -->
+    @if (performanceMetrics() && !loading()) {
+      <div class="performance-cards">
+        @for (card of performanceMetrics().performance_cards; track card.title; let i = $index) {
+          <div class="performance-card hover-lift stagger-item" [class]="card.color">
+            <div class="metric-icon">
+              <i [class]="getIconClass(card.icon)"></i>
+            </div>
+            <div class="metric-value bounce-in">{{ card.percentage }}%</div>
+            <div class="metric-label">{{ card.title }}</div>
+            <div class="metric-description">{{ card.description }}</div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Charts Section -->
+    @if ((featureImportance() || performanceMetrics() || confusionMatrix()) && !loading()) {
+      <div class="charts-section fade-in">
+        <h3 class="section-title slide-up">Visualizations and Analytics</h3>
+        <div class="charts-grid">
+          
+          <!-- Feature Importance Chart -->
+          @if (featureImportance()) {
+            <div class="chart-wrapper hover-lift">
+              <h4 class="chart-title">Feature Importance</h4>
+              <canvas id="featureChart" class="smooth-transition"></canvas>
+            </div>
+          }
+          
+          <!-- Radar Chart -->
+          @if (performanceMetrics()) {
+            <div class="chart-wrapper hover-lift">
+              <h4 class="chart-title">Performance Metrics</h4>
+              <canvas id="radarChart" class="smooth-transition"></canvas>
+            </div>
+          }
+          
+          <!-- Confusion Matrix -->
+          @if (confusionMatrix()) {
+            <div class="chart-wrapper hover-lift">
+              <h4 class="chart-title">Confusion Matrix</h4>
+              <canvas id="confusionChart" class="smooth-transition"></canvas>
+            </div>
+          }
+          
+          <!-- Tree Structure -->
+          @if (treeStructure()) {
+            <div class="chart-wrapper hover-lift full-width">
+              <h4 class="chart-title">Decision Tree Structure</h4>
+              <canvas id="treeChart" class="smooth-transition"></canvas>
+            </div>
+          }
+          
+        </div>
+      </div>
+    }
+
+    <!-- Prediction Section -->
+    <div class="prediction-section slide-up">
+      <!-- Prediction Form -->
+      <div class="prediction-form hover-glow">
+        <h3 class="section-title">Fraud Prediction</h3>
+        <p class="mb-3">Fill in the transaction data to check if it's fraudulent:</p>
+        
+        <div class="form-grid">
+          <!-- Fields V1-V5 -->
+          <div class="form-row">
+            @for (field of fieldsV1to5; track field) {
+              <div class="form-group">
+                <label>{{ field }}:</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  [value]="getPredictionFieldValue(field)"
+                  (input)="updatePredictionField(field, +$event.target.value)"
+                  class="form-control form-control-sm">
+              </div>
+            }
+          </div>
+
+          <div class="form-row">
+            @for (field of fieldsV6to10; track field) {
+              <div class="form-group">
+                <label>{{ field }}:</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  [value]="getPredictionFieldValue(field)"
+                  (input)="updatePredictionField(field, +$event.target.value)"
+                  class="form-control form-control-sm">
+              </div>
+            }
+          </div>
+
+          <!-- Fields V11-V15 -->
+          <div class="form-row">
+            @for (field of fieldsV11to15; track field) {
+              <div class="form-group">
+                <label>{{ field }}:</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  [value]="getPredictionFieldValue(field)"
+                  (input)="updatePredictionField(field, +$event.target.value)"
+                  class="form-control form-control-sm">
+              </div>
+            }
+          </div>
+
+          <div class="form-row">
+            @for (field of fieldsV16to20; track field) {
+              <div class="form-group">
+                <label>{{ field }}:</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  [value]="getPredictionFieldValue(field)"
+                  (input)="updatePredictionField(field, +$event.target.value)"
+                  class="form-control form-control-sm">
+              </div>
+            }
+          </div>
+
+          <!-- Fields V21-V25 -->
+          <div class="form-row">
+            @for (field of fieldsV21to25; track field) {
+              <div class="form-group">
+                <label>{{ field }}:</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  [value]="getPredictionFieldValue(field)"
+                  (input)="updatePredictionField(field, +$event.target.value)"
+                  class="form-control form-control-sm">
+              </div>
+            }
+          </div>
+
+          <div class="form-row">
+            @for (field of fieldsV26to28; track field) {
+              <div class="form-group">
+                <label>{{ field }}:</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  [value]="getPredictionFieldValue(field)"
+                  (input)="updatePredictionField(field, +$event.target.value)"
+                  class="form-control form-control-sm">
+              </div>
+            }
+            <div class="form-group amount-field">
+              <label>Amount (R$):</label>
+              <input 
+                type="number" 
+                step="0.01"
+                [value]="getPredictionFieldValue('Amount')"
+                (input)="updatePredictionField('Amount', +$event.target.value)"
+                class="form-control form-control-sm">
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button 
+            class="btn btn-primary micro-bounce hover-glow"
+            (click)="predictFraud()"
+            [disabled]="loading()">
+            @if (loading()) {
+              <span class="loading-pulse">Analyzing...</span>
+            } @else {
+              <span>Predict Fraud</span>
+            }
+          </button>
+          
+          <button 
+            class="btn-sample micro-bounce hover-glow"
+            (click)="loadSampleTransaction()"
+            [disabled]="loading()">
+            Load Sample
+          </button>
+        </div>
+      </div>
+
+      <!-- Prediction Result -->
+      @if (predictionResult()) {
+        <div class="prediction-result-card bounce-in">
+          <div class="result-header">
+            <div class="result-icon scale-in" [class]="predictionResult().prediction.class === 1 ? 'fraud' : 'normal'">
+              @if (predictionResult().prediction.class === 1) {
+                <span class="icon-warning">!</span>
+              } @else {
+                <span class="icon-success">✓</span>
+              }
+            </div>
+            <h3 class="result-title fade-in" [class]="predictionResult().prediction.class === 1 ? 'fraud' : 'normal'">
+              {{ predictionResult().prediction.label }}
+            </h3>
+            <p class="result-probability slide-up">
+              Confidence: {{ formatPercent(predictionResult().prediction.confidence) }}
+            </p>
+            <div class="confidence-bar">
+              <div 
+                class="confidence-fill smooth-transition"
+                [class]="predictionResult().prediction.class === 1 ? 'fraud' : 'normal'"
+                [style.width.%]="predictionResult().prediction.confidence * 100">
+              </div>
+            </div>
+          </div>
+
+          <div class="result-details">
+            <div class="result-detail">
+              <div class="result-detail-label">Normal Probability</div>
+              <div class="result-detail-value">{{ formatPercent(predictionResult().probabilities.normal) }}</div>
+            </div>
+            <div class="result-detail">
+              <div class="result-detail-label">Fraud Probability</div>
+              <div class="result-detail-value">{{ formatPercent(predictionResult().probabilities.fraud) }}</div>
+            </div>
+            <div class="result-detail">
+              <div class="result-detail-label">Model Used</div>
+              <div class="result-detail-value">{{ predictionResult().model_id }}</div>
+            </div>
+            <div class="result-detail">
+              <div class="result-detail-label">Processed At</div>
+              <div class="result-detail-value">{{ predictionResult().predicted_at | date:'short' }}</div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

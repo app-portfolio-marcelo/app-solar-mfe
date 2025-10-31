@@ -5,8 +5,7 @@ import { ApiService } from '../../services/api';
 @Component({
   selector: 'app-solar',
   imports: [ReactiveFormsModule],
-  templateUrl: './solar.html',
-  styleUrl: './solar.scss'
+  templateUrl: './solar.html'
 })
 export class Solar {
   response: string = '';

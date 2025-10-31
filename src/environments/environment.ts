@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000', // URL do seu backend local
+  apiUrl: 'http://localhost:5000/api'  // URL do seu backend Flask
 };
