@@ -1,0 +1,197 @@
+<!-- Login Screen -->
+<div *ngIf="showLogin()" class="login-container">
+  <form (ngSubmit)="login()" class="login-form" novalidate>
+    <div class="login-header">
+      <div class="login-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L2 7v10c0 5.55 3.84 10 9 10s9-4.45 9-10V7L12 2z"/>
+        </svg>
+      </div>
+      <h2>Machine Learning Suite</h2>
+      <p class="login-subtitle">Advanced fraud detection system</p>
+    </div>
+
+    <!-- Error Display -->
+    <div *ngIf="error()" class="alert alert-danger" (click)="clearError()">
+      <div class="alert-content">
+        <span class="alert-icon">⚠️</span>
+        <span class="alert-text">{{ error() }}</span>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading()" class="loading-overlay">
+      <div class="loading-spinner"></div>
+      <p>Authenticating...</p>
+    </div>
+
+    <div class="form-group">
+      <label for="username" class="form-label">Username</label>
+      <input
+        type="text"
+        id="username"
+        class="form-control"
+        [class]="getFieldValidationClass('username')"
+        [value]="loginForm().username"
+        (input)="updateLoginField('username', $event.target.value)"
+        placeholder="Enter your username"
+        autocomplete="username"
+        required
+      />
+      <div *ngIf="getFieldValidationMessage('username')" class="invalid-feedback">
+        {{ getFieldValidationMessage('username') }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password" class="form-label">Password</label>
+      <input
+        type="password"
+        id="password"
+        class="form-control"
+        [class]="getFieldValidationClass('password')"
+        [value]="loginForm().password"
+        (input)="updateLoginField('password', $event.target.value)"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+        required
+      />
+      <div *ngIf="getFieldValidationMessage('password')" class="invalid-feedback">
+        {{ getFieldValidationMessage('password') }}
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary" [disabled]="loading()">
+      <span *ngIf="!loading()">Sign In</span>
+      <span *ngIf="loading()">Authenticating...</span>
+    </button>
+
+    <div class="login-footer">
+      <small>Demo credentials: admin/admin</small>
+    </div>
+  </form>
+</div>
+
+<!-- Main Dashboard -->
+<div *ngIf="!showLogin()" class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="dashboard-title">Machine Learning Suite</h1>
+      </div>
+      <div class="header-right">
+        <div class="user-info">
+          <div class="user-avatar">{{ (currentUser()?.username || 'U')[0].toUpperCase() }}</div>
+          <span>{{ currentUser()?.username || 'User' }}</span>
+        </div>
+        <button class="logout-btn" (click)="logout()">
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Application Description -->
+  <div class="app-description">
+    <div class="description-content">
+      <h2>Machine Learning Performance Study</h2>
+      <p>This application is a case study demonstrating the performance of different machine learning models 
+         that can be used for fraud detection. The dataset used for training and evaluation was obtained from 
+         <a href="https://www.kaggle.com/datasets/nelgiriyewithana/credit-card-fraud-detection-dataset-2023/data" target="_blank">Kaggle</a>.</p>
+      
+      <div class="dataset-info">
+        <h3>Dataset Overview</h3>
+        <p>This dataset contains credit card transactions made by European cardholders in the year 2023. It comprises over 550,000 records, and the data has been anonymized to protect the cardholders' identities. The primary objective of this dataset is to facilitate the development of fraud detection algorithms and models to identify potentially fraudulent transactions.</p>
+        
+        <div class="key-features">
+          <h4>Key Features:</h4>
+          <ul>
+            <li><strong>id:</strong> Unique identifier for each transaction</li>
+            <li><strong>V1-V28:</strong> Anonymized features representing various transaction attributes (e.g., time, location, etc.)</li>
+            <li><strong>Amount:</strong> The transaction amount</li>
+            <li><strong>Class:</strong> Binary label indicating whether the transaction is fraudulent (1) or not (0)</li>
+          </ul>
+        </div>
+      </div>
+      
+      <p class="selection-prompt">
+        <strong>Choose a machine learning model below to analyze fraud patterns and make predictions.</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- Success/Error Messages -->
+  <div *ngIf="success()" class="alert alert-success" (click)="clearSuccess()">
+    <div class="alert-content">
+      <span class="alert-icon">✅</span>
+      <span class="alert-text">{{ success() }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="error()" class="alert alert-danger" (click)="clearError()">
+    <div class="alert-content">
+      <span class="alert-icon">⚠️</span>
+      <span class="alert-text">{{ error() }}</span>
+    </div>
+  </div>
+
+  <!-- Models Grid -->
+  <main class="models-grid">
+    <div 
+      *ngFor="let model of mlModels()" 
+      class="model-card"
+      [class.available]="model.status === 'available'"
+      [class.coming-soon]="model.status === 'coming-soon'"
+      (click)="navigateToModel(model)"
+    >
+      <div class="model-header">
+        <div class="model-icon">{{ model.icon }}</div>
+        <div class="model-status" [class]="getModelStatusClass(model.status)">
+          {{ getModelStatusText(model.status) }}
+        </div>
+      </div>
+
+      <div class="model-content">
+        <h3 class="model-name">{{ model.name }}</h3>
+        <p class="model-description">{{ model.description }}</p>
+        
+        <div *ngIf="model.accuracy" class="model-accuracy">
+          <div class="accuracy-label">Accuracy</div>
+          <div class="accuracy-value">{{ model.accuracy }}%</div>
+        </div>
+
+        <div class="model-pros-cons">
+          <div *ngIf="model.pros" class="pros-section">
+            <h4 class="pros-title">✓ Advantages</h4>
+            <ul class="pros-list">
+              <li *ngFor="let pro of model.pros" class="pro-item">
+                <span class="check-mark">✓</span>{{ pro }}
+              </li>
+            </ul>
+          </div>
+          
+          <div *ngIf="model.cons" class="cons-section">
+            <h4 class="cons-title">✗ Disadvantages</h4>
+            <ul class="cons-list">
+              <li *ngFor="let con of model.cons" class="con-item">
+                <span class="cross-mark">✗</span>{{ con }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="model-footer">
+        <button 
+          class="model-action"
+          [disabled]="model.status === 'coming-soon'"
+          type="button"
+        >
+          <span *ngIf="model.status === 'available'">Launch Model</span>
+          <span *ngIf="model.status === 'coming-soon'">Coming Soon</span>
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
